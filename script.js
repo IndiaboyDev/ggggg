@@ -103,13 +103,16 @@ function drop(ev) {
       }, 1500);
     }
   }
-  // MOBILE TOUCH DRAG SUPPORT
+// MOBILE TOUCH DRAG SUPPORT
 
 let activePiece = null;
 
 document.querySelectorAll("#puzz i").forEach(piece => {
 
 piece.addEventListener("touchstart", function(e){
+
+// ❌ if piece already placed correctly
+if(piece.classList.contains("done")) return;
 
 activePiece = piece;
 
@@ -133,6 +136,8 @@ piece.style.top = (touch.clientY - piece.dataset.offsetY) + "px";
 
 piece.addEventListener("touchend", function(e){
 
+if(!activePiece) return;
+
 let touch = e.changedTouches[0];
 let element = document.elementFromPoint(touch.clientX, touch.clientY);
 
@@ -141,7 +146,7 @@ if(element && element.parentElement.id === "puz"){
 if(element.className === piece.className){
 
 element.classList.add("dropped");
-piece.classList.add("done");
+piece.classList.add("done"); // ✅ piece locked
 
 if(document.querySelectorAll('.dropped').length == 9){
 
