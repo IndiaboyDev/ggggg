@@ -103,4 +103,66 @@ function drop(ev) {
       }, 1500);
     }
   }
+  // MOBILE TOUCH DRAG SUPPORT
+
+let activePiece = null;
+
+document.querySelectorAll("#puzz i").forEach(piece => {
+
+piece.addEventListener("touchstart", function(e){
+
+activePiece = piece;
+
+let touch = e.touches[0];
+
+piece.dataset.offsetX = touch.clientX - piece.offsetLeft;
+piece.dataset.offsetY = touch.clientY - piece.offsetTop;
+
+});
+
+piece.addEventListener("touchmove", function(e){
+
+if(!activePiece) return;
+
+let touch = e.touches[0];
+
+piece.style.left = (touch.clientX - piece.dataset.offsetX) + "px";
+piece.style.top = (touch.clientY - piece.dataset.offsetY) + "px";
+
+});
+
+piece.addEventListener("touchend", function(e){
+
+let touch = e.changedTouches[0];
+let element = document.elementFromPoint(touch.clientX, touch.clientY);
+
+if(element && element.parentElement.id === "puz"){
+
+if(element.className === piece.className){
+
+element.classList.add("dropped");
+piece.classList.add("done");
+
+if(document.querySelectorAll('.dropped').length == 9){
+
+document.querySelector('#puz').classList.add('allDone');
+document.querySelector('#puz').style.border = 'none';
+document.querySelector('#puz').style.animation = 'allDone 1s linear forwards';
+
+setTimeout(function(){
+reloadPuzzle();
+randomizeImage();
+},1500);
+
+}
+
+}
+
+}
+
+activePiece = null;
+
+});
+
+});
 }
